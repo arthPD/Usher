@@ -13,7 +13,7 @@
 	<div ng-app="myApp" ng-controller="myCtrl" ng-init="initialize()">
 
 		<button id="startbtn" class="btn btn-primary pull-right" data-toggle="modal" data-target="#addservice"><i class="fa fa-hourglass-start"></i> Start Service</button>
-		<button id="savebtn" class="btn btn-primary pull-right"><i class="fa fa-save"></i> Save</button>
+		<button id="savebtn" ng-click='savefunction()' class="btn btn-primary pull-right"><i class="fa fa-save"></i> Save</button>
 		<button id="resetbtn" ng-click='reset()' class="btn btn-info"><i class="fa fa-refresh"></i> Reset</button>
 
 		<!-- Start Modal -->
@@ -252,10 +252,11 @@
 						    		if(data[key]['first'] == 1){
 						    			note = "First Timer";
 						    		}
+						    		data[key]['timestamp'] = data[key]['timestamp'].slice(10);
 								    $scope.present.push({
 								    	id:  $scope.members[ctr]['id'],
 								    	name:  $scope.members[ctr]['name'],
-								    	timein:  data[key]['timestamp'],
+								    	timein:  data[key]['timestamp'].slice(0, -3),
 								    	note:note
 								    });
 								    $scope.members.splice(ctr, 1);
@@ -402,6 +403,21 @@
 					});
 				}
 				//< ?php session_destroy();?>
+			}
+			$scope.savefunction = function(){
+				/*update attendance table*/
+				/*remove `started` session*/
+				$.ajax({
+					url: "serviceajax.php",
+					type:"POST",
+					data: {save: 1},
+					success:function(data){
+						console.log(data);
+						window.location.reload();
+					},
+					error:function(){
+					}
+				});
 			}
 		});
 	</script>

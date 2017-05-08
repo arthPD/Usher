@@ -64,6 +64,23 @@
 		$present = R::findAll('attendancemember', 'attendance_id = :att_id', [':att_id' => $_SESSION['attendance']]);
 		echo json_encode($present);
 	}
+	if(isset($_POST['save'])){
+		$all = R::findAll('attendancemember','attendance_id = :att_id', [':att_id' => $_SESSION['attendance']]);
+		$total = 0;
+		$first = 0;
+		foreach($all as $rows){
+			$total++;
+			if($rows->first == 1){
+				$first++;
+			}
+		}
+		$attendancerow = R::load('attendance', $_SESSION['attendance']);
+		$attendancerow->total = $total;
+		$attendancerow->first = $first;
+		R::store($attendancerow);
+		unset($_SESSION['started']);
+		unset($_SESSION['attendance']);
+	}
 	function start($service){
 		
 		$startservice = R::dispense('attendance');
