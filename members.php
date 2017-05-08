@@ -62,45 +62,47 @@
 						<h4 class="modal-title">Add Member</h4>
 					</div>
 					<div class="modal-body">
-						<form id='newform' class="row">
+						<form id='newform' name="newform" class="row" enctype="multipart/form-data">
 							<div class="row container-fluid">
 								<div style="padding-bottom: 5px">
 									<div class="col-md-6">
-										<label>Full Name: </label><input type="text" class="form-control" id="name">
+										<label>Full Name: </label><input type="text" class="form-control" id="name" name="name">
 									</div>
 									<div class="col-md-6">
-										<label>Birthdate: </label><input readonly data-provide="datepicker" class="form-control" id="birthdate" data-date-end-date="-10y" data-date-format="MM dd, yyyy" required>
+										<label>Birthdate: </label><input readonly data-provide="datepicker" class="form-control" id="birthdate" name="birthdate" data-date-end-date="-10y" data-date-format="MM dd, yyyy" required>
 									</div>
 								</div>
 								<div class="col-md-12" style="padding-bottom: 5px">
 									<label >Address:</label>
-									<textarea placeholder="House No./Street/Brgy./City" class="form-control" rows="5" id="address"></textarea>	
+									<textarea placeholder="House No./Street/Brgy./City" class="form-control" rows="5" id="address" name="address"></textarea>	
 								</div>
 								<div>
 									<div class="col-md-6">
 										<label>Contact Number:</label>
-										<input type="number" id="contact_no" class="form-control">
+										<input type="number" id="contact_no" name="contact_no" class="form-control">
 									</div>
 									<div class="col-md-6">
 										<label>Image:</label>
-										<input type="file" accept="image/*" class="form-control" id="image">
+										<input type="file" accept="image/*" class="form-control" name="fileToUpload" id="fileToUpload">
 									</div>
 								</div>
 								<div class="col-md-12" style="padding-bottom: 5px">
 									<label >Note:</label>
-									<textarea placeholder="Additional Note/Description" class="form-control" rows="5" id="note"></textarea>	
+									<textarea placeholder="Additional Note/Description" class="form-control" rows="5" id="note" name="note"></textarea>	
 								</div>
 							</div>
 					</div>
 					<div class="modal-footer">
 						<button ng-click="addfunction()" data-dismiss="modal" class="btn btn-primary">Save</button>
 						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<input type="hidden" name="addform" value="1">
 						</form>
 					</div>
 				</div>
 			</div>
 		</div>
-
+		<!-- <a href="tel:18475555555">Click Here To Call Support 1-847-555-5555</a>  -->
+		<!-- edit Member modal -->
 		<div id="add2" class="modal fade" role="dialog">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -109,40 +111,44 @@
 						<h4 class="modal-title">Edit Profile</h4>
 					</div>
 					<div class="modal-body">
-						<form id='newform' class="row">
+					<div class="arthcontainer" style="display: flex;">
+						<img src="" style="margin: 0 auto; height: 274px; border-radius: 55%; padding: 10px;" id="editimage">
+					</div>
+						<form id='newform2' name="newform2" class="row" enctype="multipart/form-data">
 							<div class="row container-fluid">
 								<div style="padding-bottom: 5px">
 									<div class="col-md-6">
-										<label>Full Name: </label><input type="text" class="form-control" id="name2">
+										<label>Full Name: </label><input type="text" class="form-control" id="name2" name="name2">
 									</div>
 									<div class="col-md-6">
-										<label>Birthdate: </label><input readonly data-provide="datepicker" class="form-control" id="birthdate2" data-date-end-date="-10y" data-date-format="MM dd, yyyy" required>
+										<label>Birthdate: </label><input readonly data-provide="datepicker" class="form-control" id="birthdate2" name="birthdate2" data-date-end-date="-10y" data-date-format="MM dd, yyyy" required>
 									</div>
 								</div>
 								<div class="col-md-12" style="padding-bottom: 5px">
 									<label >Address:</label>
-									<textarea placeholder="House No./Street/Brgy./City" class="form-control" rows="5" id="address2"></textarea>	
+									<textarea placeholder="House No./Street/Brgy./City" class="form-control" rows="5" id="address2" name="address2"></textarea>	
 								</div>
 								<div>
 									<div class="col-md-6">
 										<label>Contact Number:</label>
-										<input type="number" id="contact_no2" class="form-control">
+										<input type="number" id="contact_no2" name="contact_no2" class="form-control">
 									</div>
 									<div class="col-md-6">
 										<label>Image:</label>
-										<input type="file" accept="image/*" class="form-control" id="image2">
+										<input type="file" accept="image/*" class="form-control" id="fileToUpload2" name="fileToUpload2">
 									</div>
 								</div>
 								<div class="col-md-12" style="padding-bottom: 5px">
 									<label >Note:</label>
-									<textarea placeholder="Additional Note/Description" class="form-control" rows="5" id="note2"></textarea>	
+									<textarea placeholder="Additional Note/Description" class="form-control" rows="5" id="note2" name="note2"></textarea>	
 								</div>
 							</div>
 					</div>
 					<div class="modal-footer">
-						<input type="hidden" id="id2">
+						<input type="hidden" id="id2" name="id2">
 						<button ng-click="edit()" data-dismiss="modal" class="btn btn-primary">Save</button>
 						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<input type="hidden" name="editform" value="1">
 						</form>
 					</div>
 				</div>
@@ -209,15 +215,13 @@
 		    	})/*relfect delete*/
 		    }
 		    $scope.addfunction = function(){
-				var name = document.getElementById('name').value;
-				var birthdate = document.getElementById('birthdate').value;
-				var address = document.getElementById('address').value;
-				var contact_no = document.getElementById('contact_no').value;
-				var note = document.getElementById('note').value;
+				var formdata = new FormData($("#newform")[0]);
 				$.ajax({
 					url: "memberajax.php",
 					type:"POST",
-					data:{name, birthdate, address, contact_no, note, addform: 1},
+					data: formdata,//{name, birthdate, address, contact_no, note, fileToUpload, addform: 1},
+				  	processData: false,
+  					contentType: false,
 					success: function(data){
 						$scope.members = JSON.parse(data);
 						$scope.$apply();
@@ -239,19 +243,22 @@
 				$('#address2').val(member.address);
 				$('#contact_no2').val(member.contact_no);
 				$('#note2').val(member.note);
+				$('#fileToUpload2').src = "";
 				$('#add2').modal('show');
+				if(member.image == ""){
+					document.getElementById("editimage").src = "images/avatar.png";
+				}else{
+					document.getElementById("editimage").src = "images/"+member.image;
+				}
 			}
 			$scope.edit = function(){
-				var id = document.getElementById('id2').value;
-				var name = document.getElementById('name2').value;
-				var birthdate = document.getElementById('birthdate2').value;
-				var address = document.getElementById('address2').value;
-				var contact_no = document.getElementById('contact_no2').value;
-				var note = document.getElementById('note2').value;
+				var formdata = new FormData($("#newform2")[0]);
 				$.ajax({
 					url: "memberajax.php",
 					type:"POST",
-					data:{id, name, birthdate, address, contact_no, note, editform: 1},
+					data:formdata,
+				  	processData: false,
+  					contentType: false,
 					success: function(data){
 						$scope.members = JSON.parse(data);
 						$scope.$apply();
@@ -276,7 +283,6 @@
 					}
 				});
 			}
-
 		});
 	</script>
 	<script>

@@ -71,27 +71,27 @@
       <img src="ag.png" class="img-responsive" height="150px" width="180px" style="margin-left:35px; margin-bottom: 2%">
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
       <?php  
-        if($_SESSION['page'] == 'Home'){
+        if(isset($_SESSION['page']) && $_SESSION['page'] == 'Home'){
           echo "<a href='index.php' class='active'>Home</a>";
         }else{
           echo "<a href='index.php'>Home</a>";
         }
-        if($_SESSION['page'] == 'Members'){
+        if(isset($_SESSION['page']) && $_SESSION['page'] == 'Members'){
           echo "<a href='members.php' class='active'>Members</a>";
         }else{
           echo "<a href='members.php'>Members</a>";
         }
-        if($_SESSION['page'] == 'Services'){
+        if(isset($_SESSION['page']) && $_SESSION['page'] == 'Services'){
           echo "<a href='services.php' class='active'>Services</a>";
         }else{
           echo "<a href='services.php'>Services</a>";
         }
-        if($_SESSION['page'] == 'Reports'){
+        if(isset($_SESSION['page']) && $_SESSION['page'] == 'Reports'){
           echo "<a href='reports.php' class='active'>Reports</a>";
         }else{
           echo "<a href='reports.php'>Reports</a>";
         }
-        if($_SESSION['page'] == 'Account'){
+        if(isset($_SESSION['page']) && $_SESSION['page'] == 'Account'){
           echo "<a href='account.php' class='active'>Account</a>";
         }else{
           echo "<a href='account.php'>Account</a>";

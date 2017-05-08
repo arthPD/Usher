@@ -4,16 +4,17 @@
 	$services = R::findAll('services');
 	$members = R::findAll('members');
 	$session = "No service started";
-	if(!isset($_SESSION['started'])){
+	if(!isset($_SESSION['started']) || empty($_SESSION['started'])){
 		$_SESSION['started'] = "No service started";;
 	}
+	//session_destroy();
 ?>
 	<!-- body here -->
 	<div ng-app="myApp" ng-controller="myCtrl" ng-init="initialize()">
 
 		<button id="startbtn" class="btn btn-primary pull-right" data-toggle="modal" data-target="#addservice"><i class="fa fa-hourglass-start"></i> Start Service</button>
 		<button id="savebtn" class="btn btn-primary pull-right"><i class="fa fa-save"></i> Save</button>
-		<button id="resetbtn" class="btn btn-info"><i class="fa fa-refresh"></i> Reset</button>
+		<button id="resetbtn" ng-click='reset()' class="btn btn-info"><i class="fa fa-refresh"></i> Reset</button>
 
 		<!-- Start Modal -->
 		<div id="addservice" class="modal fade" role="dialog">
@@ -163,7 +164,6 @@
 			</div>
 		</div><!-- add first timer modal -->
 	</div><!-- angular div -->
-
 	</div>
 	<script type="text/javascript" src="js/bootstrap.js"></script>
 	<script type="text/javascript" src="js/bootstrap-datepicker.js"></script>	
@@ -217,7 +217,6 @@
 						$scope.poststart();
 					},
 					error: function(data){
-
 					}
 				});
 			}
@@ -228,7 +227,47 @@
 				$('#resetbtn').show();
 				$('#presenttbl').show();
 				$('#addmemberbtn').show();
-				$scope.servicetitle = "<?php echo $_SESSION['started']; ?>";
+				<?php
+					$stringz = "$";
+					if($_SESSION['started'] !== "No service started"){
+						echo "".$stringz."scope.servicetitle = '".$_SESSION['started']."';";
+					}
+				?>
+				//$members from database
+		    	var array = '<?php echo json_encode($members) ?>';
+		    	var array = JSON.parse(array);
+		    	Object.keys(array).forEach(function(key) {
+				    $scope.members.push(array[key]);
+				});
+				$.ajax({
+					url: "serviceajax.php",
+					method: "POST",
+					data: {refill: 1},
+					success: function(data){
+						data = JSON.parse(data);
+				    	Object.keys(data).forEach(function(key) {
+				    		for(var ctr = 0; ctr < $scope.members.length; ctr++){
+				    			if(data[key]['member_id'] == $scope.members[ctr]['id']){
+						    		var note = "";
+						    		if(data[key]['first'] == 1){
+						    			note = "First Timer";
+						    		}
+								    $scope.present.push({
+								    	id:  $scope.members[ctr]['id'],
+								    	name:  $scope.members[ctr]['name'],
+								    	timein:  data[key]['timestamp'],
+								    	note:note
+								    });
+								    $scope.members.splice(ctr, 1);
+					    			$scope.$apply();
+				    			}
+				    		}
+						});
+
+					},
+					error: function(data){
+					}
+				});
 			}
 			$scope.custom = function(type){
 				if(type == 'other'){
@@ -245,7 +284,17 @@
 						timein: new Date().toLocaleTimeString(),
 						note: ""
 					});
-					/*to db*/
+					/*to db*//*to function*/
+					$.ajax({
+						url: "serviceajax.php",
+						type:"POST",
+						data: {toattendancemember: 1, memberid: member["id"]},
+						success: function(data){
+						},
+						error: function(data){
+							alert('error');
+						}
+					});
 					$scope.members.splice($index, 1);
 					var searchtext = $('#search').val();
 					if(searchtext.length > 0){
@@ -313,6 +362,16 @@
 							note: "First Timer"
 						});
 						/*add to db*/
+						$.ajax({
+							url: "serviceajax.php",
+							type:"POST",
+							data: {toattendancemember: 1, memberid: member["id"], note: 1},
+							success: function(data){
+							},
+							error: function(data){
+								alert('error');
+							}
+						});
 						$scope.$apply();
 						$('#name').val('');
 						$('#birthdate').val('');
@@ -325,6 +384,24 @@
 						alert('Error!');
 					}
 				});
+			}
+			$scope.reset = function(){
+				var reset = confirm("Are you sure?");
+				if (reset == true){
+					$.ajax({
+						url: "serviceajax.php",
+						type:"POST",
+						data: {unset: 1},
+						success:function(){
+							window.location.reload();
+							/*delete attendance row from table*/
+							/*delete attendancemember rows*/
+						},
+						error:function(){
+						}
+					});
+				}
+				//< ?php session_destroy();?>
 			}
 		});
 	</script>
